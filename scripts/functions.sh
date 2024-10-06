@@ -204,7 +204,7 @@ function generateClientConfig() {
     echo "$(datef) Config server started, download your $FILE_NAME config at http://$HOST_ADDR_INT:$HOST_CONF_PORT/"
     echo "$(datef) NOTE: After you download your client config, http server will be shut down!"
 
-    { echo -ne "HTTP/1.1 200 OK\r\nContent-Length: $(wc -c <$FILE_PATH)\r\nContent-Type: $CONTENT_TYPE\r\nContent-Disposition: attachment; fileName=\"$FILE_NAME\"\r\nAccept-Ranges: bytes\r\n\r\n"; cat "$FILE_PATH"; } | nc -w0 -l 8080
+    { echo -ne "HTTP/1.1 200 OK\r\nContent-Length: $(wc -c <$FILE_PATH)\r\nContent-Type: $CONTENT_TYPE\r\nContent-Disposition: attachment; fileName=\"$FILE_NAME\"\r\nAccept-Ranges: bytes\r\n\r\n"; cat "$FILE_PATH"; } | nc -w0 -l 0.0.0.0 8080
 
     echo "$(datef) Config http server has been shut down"
 }

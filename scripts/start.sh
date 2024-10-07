@@ -50,8 +50,23 @@ if [ ! -c /dev/net/tun ]; then
     mknod /dev/net/tun c 10 200
 fi
 
+# 读取环境变量 ROUTERS
+routers_content=${ROUTERS:-""}
+# 初始化拼接字符串
+output_routers=""
+
+# 检查 routers_content 内容是否为空
+if [[ -n "$routers_content" ]]; then
+  # 使用逗号分割内容并进行拼接
+  IFS=',' read -ra ADDR <<< "$routers_content"
+  for item in "${ADDR[@]}"; do
+    output_routers+="route $item 255.255.255.0 vpn_gateway \n"
+  done
+fi
+
 # Replace variables in ovpn config file
 sed -i 's/%HOST_TUN_PROTOCOL%/'"$HOST_TUN_PROTOCOL"'/g' /etc/openvpn/server.conf
+sed -i 's/%ROUTERS%/'"$output_routers"'/g' /etc/openvpn/server.conf
 
 # Allow ${HOST_TUN_PROTOCOL} traffic on port 1194.
 iptables -A INPUT -i $ADAPTER -p ${HOST_TUN_PROTOCOL} -m state --state NEW,ESTABLISHED --dport 1194 -j ACCEPT

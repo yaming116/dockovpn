@@ -60,7 +60,7 @@ if [[ -n "$routers_content" ]]; then
   # 使用逗号分割内容并进行拼接
   IFS=',' read -ra ADDR <<< "$routers_content"
   for item in "${ADDR[@]}"; do
-    output_routers+="route $item 255.255.255.0 vpn_gateway \n"
+    output_routers+="push \"route $item 255.255.255.0 vpn_gateway\"\n"
   done
 fi
 
